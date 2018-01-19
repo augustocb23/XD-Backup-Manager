@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Conexao {
 	//nome do arquivo que contém os dados
-	private final static String db = "backups.sqlite";
+	private final static String db = System.getProperty("user.home") + "/backups.sqlite";
 
 	public static void start() throws Exception {
 		File file = new File(db);
