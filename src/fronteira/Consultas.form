@@ -132,7 +132,9 @@
             <children>
               <component id="f5911" class="javax.swing.JTable" binding="tabelaConsulta">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <autoCreateRowSorter value="true"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

@@ -72,7 +72,9 @@
                 <children>
                   <component id="7da05" class="javax.swing.JTable" binding="tblPacotes">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
@@ -200,7 +202,9 @@
                 <children>
                   <component id="aeb16" class="javax.swing.JTable" binding="tblBackups">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
