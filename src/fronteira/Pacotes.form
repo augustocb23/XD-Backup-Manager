@@ -34,7 +34,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="Pesquise por nome, tipo, ator ou tags"/>
+            </properties>
           </component>
           <component id="2a5e3" class="javax.swing.JButton" binding="atualizarButton" default-binding="true">
             <constraints>
