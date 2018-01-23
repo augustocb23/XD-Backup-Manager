@@ -11,8 +11,10 @@ public class Conexao {
 	private final static String db = System.getProperty("user.home") + "/backups.sqlite";
 
 	public static void start() throws Exception {
+		//testa se o banco de dados existe
 		File file = new File(db);
 		if (!file.exists()) {
+			//cria um novo banco de dados
 			try {
 				Connection c = getConnection();
 				Statement s = c.createStatement();
@@ -78,7 +80,6 @@ public class Conexao {
 						"      ON UPDATE CASCADE" +
 						"      ON DELETE CASCADE," +
 						"  codTag    INTEGER" +
-						"    PRIMARY KEY" +
 						"    CONSTRAINT TagsXpacote_Tags_codTag_fk" +
 						"    REFERENCES tags (codTag)" +
 						"      ON UPDATE CASCADE" +
@@ -101,8 +102,13 @@ public class Conexao {
 				c.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				throw new Exception("Não foi possível acessar o banco de dados.");
 			}
 			throw new Exception("Não foi possível localizar o banco de dados.\nUm novo arquivo foi gerado.");
+		}
+		//verifica se o arquivo é somente leitura
+		if (!file.canWrite()) {
+			throw new Exception("O banco de dados é somente leitura.\nNão será possível fazer alterações.");
 		}
 	}
 

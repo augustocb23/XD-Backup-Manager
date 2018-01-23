@@ -5,6 +5,7 @@ import controle.PacoteDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 public class Pacote {
@@ -15,6 +16,7 @@ public class Pacote {
 	private Double tamanho;
 	private TipoPacote tipo;
 	private Integer codigoBackup;
+	private LinkedHashSet<Tag> tags;
 
 	public static void cadastraPacote(Pacote pacote) throws Exception {
 		pacote.nome = pacote.nome.toUpperCase();
@@ -132,6 +134,14 @@ public class Pacote {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public LinkedHashSet<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(LinkedHashSet<Tag> tags) {
+		this.tags = tags;
 	}
 
 	public Double getTamanho() {

@@ -2,6 +2,7 @@ package fronteira;
 
 import entidade.Ator;
 import entidade.Pacote;
+import entidade.Tag;
 import entidade.TipoPacote;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashSet;
 
 class CadastraPacote extends Cadastros {
 	private Pacote pacote = new Pacote();
@@ -25,6 +27,9 @@ class CadastraPacote extends Cadastros {
 	private JSpinner spnTamanho;
 	private TipoPacote tipoPacote;
 	private JTextField txtTipo;
+	private JList<String> lstTags;
+	private LinkedHashSet<Tag> listaTags = new LinkedHashSet<>();
+	private DefaultListModel<String> lstModel = new DefaultListModel<>();
 	private JTextField txtBackup;
 
 	private CadastraPacote() {
@@ -140,6 +145,25 @@ class CadastraPacote extends Cadastros {
 		txtTipo.setToolTipText("Defina o tipo de conteúdo que o pacote contém");
 		btnLimparTipo.setToolTipText("Deixar o campo em branco");
 		adicionaCampo(pnlCampos, pnlTipo, true);
+		//campo tags (botões)
+		JPanel pnlTagsBtn = new JPanel(new GridBagLayout());
+		JButton btnAdicTag = new JButton("Adicionar tag");
+		btnAdicTag.addActionListener(e -> adicionarTag());
+		btnAdicTag.setToolTipText("Adicionar uma tag ao pacote");
+		adicionaCampo(pnlTagsBtn, btnAdicTag, true);
+		JButton btnRemovTag = new JButton("Remover");
+		btnRemovTag.addActionListener(e -> removerTag());
+		btnRemovTag.setToolTipText("Remove a tag selecionada");
+		adicionaCampo(pnlTagsBtn, btnRemovTag, true);
+		adicionaCampo(pnlCampos, pnlTagsBtn, true);
+		//campo tags (lista)
+		JPanel pnlTagsLista = new JPanel(new GridBagLayout());
+		lstTags = new JList<>(lstModel);
+		lstTags.setLayoutOrientation(JList.VERTICAL);
+		lstTags.setVisibleRowCount(5);
+		JScrollPane scrLista = new JScrollPane(lstTags);
+		adicionaCampo(pnlTagsLista, scrLista, true);
+		adicionaCampo(pnlCampos, pnlTagsLista, true);
 		//campo backup
 		JPanel pnlBackup = new JPanel(new GridBagLayout());
 		JLabel lblBackup = new JLabel("Backup:");
@@ -187,6 +211,10 @@ class CadastraPacote extends Cadastros {
 		txtData.setText(new SimpleDateFormat("dd/MM/yyyy").format(pacote.getData()));
 		spnTamanho.setValue(pacote.getTamanho());
 		txtTipo.setText(tipoPacote.getNome());
+		listaTags = pacote.getTags();
+		lstTags.setVisibleRowCount(5);
+		for (Tag tag : listaTags)
+			lstModel.addElement((tag.getNome()));
 		txtBackup.setText(pacote.getCodigoBackup() == null ? null : String.valueOf(pacote.getCodigoBackup()));
 		btnSalvar.setEnabled(true);
 	}
@@ -198,7 +226,33 @@ class CadastraPacote extends Cadastros {
 
 	static void altera(int codigo) {
 		CadastraPacote janela = new CadastraPacote(codigo);
+		janela.pack();
 		janela.setVisible(true);
+	}
+
+	//adiciona uma tag ao pacote
+	private void adicionarTag() {
+		Tag tag = ConsultaTag.seleciona();
+		if (tag == null)
+			return;
+
+		//verifica se o pacote já foi adicionado
+		if (!listaTags.add(tag)) {
+			JOptionPane.showMessageDialog(null, "Tag já foi adicionada a este pacote.\n" + "Selecione uma tag " +
+					"diferente.", "Tag já adicionada", JOptionPane.INFORMATION_MESSAGE);
+
+			return;
+		}
+
+		//insere na JList
+		lstModel.addElement(tag.getNome());
+	}
+
+	//remove a tag selecionada do pacote
+	private void removerTag() {
+		String itemSelecionado = lstTags.getSelectedValue();
+		listaTags.removeIf((Tag tag) -> tag.getNome().contentEquals(itemSelecionado));
+		lstModel.removeElement(itemSelecionado);
 	}
 
 	@Override
@@ -216,6 +270,7 @@ class CadastraPacote extends Cadastros {
 		pacote.setData(data);
 		pacote.setTamanho((Double) spnTamanho.getValue());
 		pacote.setTipo(tipoPacote);
+		pacote.setTags(listaTags);
 
 		try {
 			if (pacote.getCodigo() == null) //se for um novo item

@@ -3,6 +3,7 @@ package fronteira;
 import controle.Conexao;
 import entidade.Backup;
 import entidade.Pacote;
+import entidade.Tag;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,6 +13,8 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 public class Pacotes {
 	private final static String titulo = "XD Backup Manager";
@@ -66,6 +69,7 @@ public class Pacotes {
 		mdlPacotes.addColumn("Data");
 		mdlPacotes.addColumn("Tamanho");
 		mdlPacotes.addColumn("Backup");
+		mdlPacotes.addColumn("Tags");
 		tblPacotes.getColumn("Código").setMaxWidth(60);
 
 		//cria o cabeçalho para a tabela de backups
@@ -167,13 +171,7 @@ public class Pacotes {
 
 		//preenche a tabela de pacotes
 		mdlPacotes.setNumRows(0);
-		for (Pacote pacote : listaFiltrada) {
-			mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), pacote.getTipo() == null ? null :
-					pacote.getTipo().getNome(), pacote.getAtor() == null ? null : pacote.getAtor().getNome(), new
-					SimpleDateFormat("dd/MM/yyyy").format(pacote
-					.getData()),
-					new DecimalFormat("##.### GB").format(pacote.getTamanho()), pacote.getCodigoBackup()});
-		}
+		preencheTabela(listaFiltrada);
 	}
 
 	private void onExcluirPacote() {
@@ -235,6 +233,8 @@ public class Pacotes {
 
 	//métodos para ambas as abas
 	private void onTags() {
+		ConsultaTag.consulta();
+		onAtualizar();
 	}
 
 	private void onAtualizar() {
@@ -250,13 +250,7 @@ public class Pacotes {
 
 		//preenche a tabela de pacotes
 		mdlPacotes.setNumRows(0);
-		for (Pacote pacote : listaPacotes) {
-			mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), pacote.getTipo() == null ? null :
-					pacote.getTipo().getNome(), pacote.getAtor() == null ? null : pacote.getAtor().getNome(), new
-					SimpleDateFormat("dd/MM/yyyy").format(pacote
-					.getData()),
-					new DecimalFormat("##.### GB").format(pacote.getTamanho()), pacote.getCodigoBackup()});
-		}
+		preencheTabela(listaPacotes);
 		//preenche a ComboBox
 		cmbBackups.removeAllItems();
 		cmbBackups.addItem(null);
@@ -272,7 +266,7 @@ public class Pacotes {
 	}
 
 	private void filtraTabelas() {
-		ArrayList<Pacote> listaFiltrada = new ArrayList<>();
+		LinkedHashSet<Pacote> listaFiltrada = new LinkedHashSet<>();
 
 		String termo = txtBusca.getText();
 		int termoExt = termo.length(); // numero de caracteres a serem buscados
@@ -281,25 +275,44 @@ public class Pacotes {
 			int nomePacExt = pacote.getNome().length(); // numero de caracteres
 			for (int i = 0; i <= nomePacExt - termoExt; i++) // busca pela string
 				if (pacote.getNome().regionMatches(true, i, termo, 0, termoExt))
-					if (!listaFiltrada.contains(pacote)) //se encontrou, adiciona na lista
+					listaFiltrada.add(pacote);
+			//busca no tipo
+			if (pacote.getTipo().getNome() != null) {
+				int nomeTipoExt = pacote.getTipo().getNome().length();
+				for (int i = 0; i <= nomeTipoExt - termoExt; i++) // busca pela string
+					if (pacote.getTipo().getNome().regionMatches(true, i, termo, 0, termoExt))
 						listaFiltrada.add(pacote);
+			}
 			//busca no ator
 			if (pacote.getAtor().getNome() != null) {
 				int nomeAtorExt = pacote.getAtor().getNome().length();
 				for (int i = 0; i <= nomeAtorExt - termoExt; i++) // busca pela string
 					if (pacote.getAtor().getNome().regionMatches(true, i, termo, 0, termoExt))
-						if (!listaFiltrada.contains(pacote)) //se encontrou, adiciona na lista
-							listaFiltrada.add(pacote);
+						listaFiltrada.add(pacote);
+			}
+			//busca nas tags
+			for (Tag tag : pacote.getTags()) {
+				int nomeTagExt = tag.getNome().length();
+				for (int i = 0; i <= nomeTagExt - termoExt; i++) // busca pela string
+					if (tag.getNome().regionMatches(true, i, termo, 0, termoExt))
+						listaFiltrada.add(pacote);
 			}
 		}
 
 		mdlPacotes.setNumRows(0);
-		for (Pacote pacote : listaFiltrada) {
+		preencheTabela(listaFiltrada);
+	}
+
+	private void preencheTabela(Collection<Pacote> lista) {
+		for (Pacote pacote : lista) {
+			StringBuilder tags = new StringBuilder();
+			for (Tag tag : pacote.getTags())
+				tags.append(tag.getNome()).append("; ");
 			mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), pacote.getTipo() == null ? null :
 					pacote.getTipo().getNome(), pacote.getAtor() == null ? null : pacote.getAtor().getNome(), new
 					SimpleDateFormat("dd/MM/yyyy").format(pacote
 					.getData()),
-					new DecimalFormat("##.### GB").format(pacote.getTamanho()), pacote.getCodigoBackup()});
+					new DecimalFormat("##.### GB").format(pacote.getTamanho()), pacote.getCodigoBackup(), tags});
 		}
 	}
 

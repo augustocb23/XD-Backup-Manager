@@ -64,6 +64,10 @@ public class Backup {
 		try {
 			BackupDAO.alteraBackup(backup, codigo);
 		} catch (SQLException e) {
+			//código já está em uso
+			if (e.getErrorCode() == 19)
+				throw new Exception("Código do backup já está em uso");
+
 			System.out.println("Código:" + e.getErrorCode());
 			e.printStackTrace();
 			throw new Exception(e.getMessage());
