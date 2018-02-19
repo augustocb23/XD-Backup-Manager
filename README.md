@@ -19,9 +19,12 @@ Um gerenciador de backups em Java utilizando um banco de dados em [SQLite](http:
   É possível buscar os pacotes por nome, tipo, tags ou atores, ou filtrar por backups.
 
 # Instalação
-Baixe e execute o arquivo _instalar.exe_. Caso o Java não tenha tenha sido detectado, será exibida uma mensagem informando que este deve ser instalado.
-Ao abrir o programa pela primeira vez, será exibida uma mensagem que um novo banco de dados foi gerado.
-
+1. Baixe e execute o arquivo `instalar.exe` (somente Windows). Caso o Java não tenha tenha sido detectado, será exibida uma mensagem informando que este deve ser instalado.
+    - Pode-se executar sem instalar através do arquivo `portable.jar`.
+2. Ao abrir o programa pela primeira vez, será exibida uma mensagem que um novo banco de dados foi gerado.
+    - Os dados são salvos no arquivo `backups.sqlite`, na pasta padrão do usuário (`C:\Users\USUARIO` no Windows, `\home\USUARIO` no Linux).
+    - Ao desinstalar/atualizar, os dados não são apagados.
 # Licença
   O software utiliza o [SQLite JDBC Driver](https://github.com/xerial/sqlite-jdbc), por Xerial.
   Distribuído sob a [Licença Apache 2.0](http://www.apache.org/licenses/).
+  > Uma cópia do driver está incluso na pasta `lib`
