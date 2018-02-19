@@ -32,9 +32,9 @@ public class ConsultaTag extends Consultas {
 		janela.setVisible(true);
 	}
 
-	static Tag seleciona() {
+	static ArrayList<Tag> seleciona() {
 		ConsultaTag janela = new ConsultaTag();
-		Tag tag = new Tag();
+		ArrayList<Tag> tags = new ArrayList<>();
 
 		//limpa o painel central e adiciona o botão Selecionar
 		janela.pnlCentral.removeAll();
@@ -42,15 +42,20 @@ public class ConsultaTag extends Consultas {
 		btnSelecionar.setMnemonic('S');
 		btnSelecionar.addActionListener(e -> {
 			//tenta obter a linha selecionada
-			int linhaSeleciona = janela.tabelaConsulta.getSelectedRow();
-			if (linhaSeleciona == -1) {
+			int[] linhasSelecionadas = janela.tabelaConsulta.getSelectedRows();
+			if (linhasSelecionadas.length == 0) {
 				JOptionPane.showMessageDialog(null, "Selecione um item da lista.", "Selecionar item", JOptionPane
 						.ERROR_MESSAGE);
 				return;
 			}
 
-			tag.setCodigo((Integer) janela.modeloTabela.getValueAt(linhaSeleciona, 0));
-			tag.setNome(String.valueOf(janela.modeloTabela.getValueAt(linhaSeleciona, 1)));
+			for (int linha : linhasSelecionadas) {
+				Tag tag = new Tag();
+				tag.setCodigo((Integer) janela.modeloTabela.getValueAt(linha, 0));
+				tag.setNome(String.valueOf(janela.modeloTabela.getValueAt(linha, 1)));
+
+				tags.add(tag);
+			}
 
 			janela.setVisible(false);
 		});
@@ -61,7 +66,7 @@ public class ConsultaTag extends Consultas {
 		janela.setVisible(true);
 
 		//retorna o item seleciona ou null
-		return tag.getNome() == null ? null : tag;
+		return tags;
 	}
 
 	@Override

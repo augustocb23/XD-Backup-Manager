@@ -31,23 +31,31 @@ class ConsultaPacote extends Consultas {
 		onAtualizar();
 	}
 
-	static Pacote seleciona() {
-		Pacote pacote = new Pacote();
+	static ArrayList<Pacote> seleciona() {
 		ConsultaPacote janela = new ConsultaPacote();
+		ArrayList<Pacote> pacotes = new ArrayList<>();
 
 		//limpa o painel central e adiciona o botão Selecionar
 		JButton btnSelecionar = new JButton("Selecionar");
 		btnSelecionar.setMnemonic('S');
 		btnSelecionar.addActionListener(e -> {
 			//tenta obter a linha selecionada
-			int linhaSeleciona = janela.tabelaConsulta.getSelectedRow();
-			if (linhaSeleciona == -1) {
+			int[] linhasSelecionadas = janela.tabelaConsulta.getSelectedRows();
+			if (linhasSelecionadas.length == 0) {
 				JOptionPane.showMessageDialog(null, "Selecione um item da lista.", "Selecionar item", JOptionPane
 						.ERROR_MESSAGE);
 				return;
 			}
 
-			pacote.setCodigo((Integer) janela.modeloTabela.getValueAt(linhaSeleciona, 0));
+			for (int linha : linhasSelecionadas) {
+				Pacote pacote = null; //busca os dados do pacote selecionado no banco
+				try {
+					pacote = Pacote.buscaPacote((Integer) janela.modeloTabela.getValueAt(linha, 0));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				pacotes.add(pacote); //adiciona à lista
+			}
 
 			janela.setVisible(false);
 		});
@@ -57,12 +65,7 @@ class ConsultaPacote extends Consultas {
 		janela.onAtualizar();
 		janela.setVisible(true);
 
-		try {
-			return pacote.getCodigo() == null ? null : Pacote.buscaPacote(pacote.getCodigo());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return pacotes;
 	}
 
 	@Override

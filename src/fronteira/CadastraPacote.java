@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 
@@ -232,20 +233,20 @@ class CadastraPacote extends Cadastros {
 
 	//adiciona uma tag ao pacote
 	private void adicionarTag() {
-		Tag tag = ConsultaTag.seleciona();
-		if (tag == null)
+		ArrayList<Tag> tags = ConsultaTag.seleciona();
+		if (tags.isEmpty())
 			return;
 
-		//verifica se o pacote já foi adicionado
-		if (!listaTags.add(tag)) {
-			JOptionPane.showMessageDialog(null, "Tag já foi adicionada a este pacote.\n" + "Selecione uma tag " +
-					"diferente.", "Tag já adicionada", JOptionPane.INFORMATION_MESSAGE);
-
-			return;
-		}
-
-		//insere na JList
-		lstModel.addElement(tag.getNome());
+		//adiciona as tags
+		boolean repetida = true;
+		for (Tag tag : tags)
+			if (listaTags.add(tag)) //tenta adicionar
+				lstModel.addElement(tag.getNome());
+			else if (repetida) { //avisa se houver uma tag repetida
+				JOptionPane.showMessageDialog(null, "Uma ou mais tags já foram adicionadas a este pacote", "Tag já " +
+						"adicionada", JOptionPane.INFORMATION_MESSAGE);
+				repetida = false; //evita que o aviso seja exibido mais de uma vez
+			}
 	}
 
 	//remove a tag selecionada do pacote
