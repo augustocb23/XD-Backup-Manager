@@ -11,7 +11,9 @@ import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 class CadastraBackup extends Cadastros {
@@ -174,37 +176,44 @@ class CadastraBackup extends Cadastros {
 	}
 
 	private void adicionaPacote() {
-		Pacote pacote = ConsultaPacote.seleciona();
-		if (pacote == null)
+		ArrayList<Pacote> pacotes = ConsultaPacote.seleciona();
+		if (pacotes.isEmpty())
 			return;
 
 		//verifica se o pacote já pertence a outro backup
-		if (pacote.getCodigoBackup() != null) {
-			String[] opcoes = {"Sim", "Não"};
-			if (JOptionPane.showOptionDialog(null, "O pacote selecionado já pertence ao backup " + pacote
-							.getCodigoBackup() + ". Adicionar a este\nbackup irá removê-lo do backup antigo.\n" +
-							"Continuar?",
-					"Adicionar " +
-							"pacote", JOptionPane.YES_NO_OPTION, JOptionPane
-							.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
-				return;
-			pacote.setCodigoBackup(null); //limpa o campo backup
+		Iterator<Pacote> i = pacotes.iterator();
+		while (i.hasNext()) {
+			Pacote pacote = i.next();
+			if (pacote.getCodigoBackup() != null && !listaPacotes.contains(pacote)) {
+				String[] opcoes = {"Sim", "Não"};
+				if (JOptionPane.showOptionDialog(null, "O pacote " + pacote.getNome() + " já pertence ao " +
+								"backup " + pacote
+								.getCodigoBackup() + ". Adicionar a este\nbackup irá removê-lo do backup antigo.\n" +
+								"Continuar?",
+						"Adicionar " +
+								"pacote", JOptionPane.YES_NO_OPTION, JOptionPane
+								.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+					i.remove();
+				pacote.setCodigoBackup(null); //limpa o campo backup
+			}
 		}
 
-		//verifica se o pacote já foi adicionado
-		if (!listaPacotes.add(pacote)) {
-			JOptionPane.showMessageDialog(null, "Pacote já foi adicionado a este backup.\n" + "Selecione um pacote " +
-					"diferente.", "Pacote já adicionado", JOptionPane.INFORMATION_MESSAGE);
-
-			return;
-		}
-
-		//insere na tabela
-		mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### GB").format
-				(pacote.getTamanho())});
-		//atualiza os dados
-		if (pacote.getTamanho() != null)
-			tamanho += pacote.getTamanho();
+		//adiciona os pacotes
+		boolean repetido = true;
+		for (Pacote pacote : pacotes)
+			if (listaPacotes.add(pacote)) { //tenta adicionar
+				mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), /*pacote.getTamanho() == null ?
+						null :*/ new DecimalFormat("##.### GB").format(pacote.getTamanho())}); //adiciona na tabela
+				//atualiza os dados
+				if (pacote.getTamanho() != null)
+					tamanho += pacote.getTamanho();
+			} else if (repetido) { //avisa se houver um pacote repetido
+				JOptionPane.showMessageDialog(null, "Um ou mais pacotes já foram adicionados a este backup", "Pacote" +
+						" " +
+						"já " +
+						"adicionado", JOptionPane.INFORMATION_MESSAGE);
+				repetido = false; //evita que o aviso seja exibido mais de uma vez
+			}
 
 		testaCampos();
 	}
