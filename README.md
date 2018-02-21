@@ -20,7 +20,7 @@ Um gerenciador de backups em Java utilizando um banco de dados em [SQLite](http:
 
 # Instalação
 1. Baixe e execute o arquivo `instalar.exe` (somente Windows). Caso o Java não tenha tenha sido detectado, será exibida uma mensagem informando que este deve ser instalado.
-    - Pode-se executar sem instalar através do arquivo `portable.jar`.
+    - Pode-se executar sem instalar através do arquivo `backups.jar`.
 2. Ao abrir o programa pela primeira vez, será exibida uma mensagem que um novo banco de dados foi gerado.
     - Os dados são salvos no arquivo `backups.sqlite`, na pasta padrão do usuário (`C:\Users\USUARIO` no Windows, `\home\USUARIO` no Linux).
     - Ao desinstalar/atualizar, os dados não são apagados.
