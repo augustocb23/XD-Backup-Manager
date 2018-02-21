@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Conexao {
 	//nome do arquivo que contém os dados
-	private final static String db = System.getProperty("user.home") + "/backups.sqlite";
+	private final static String db = System.getProperty("user.home") + "\\backups.sqlite";
 
 	public static void start() throws Exception {
 		//testa se o banco de dados existe
@@ -102,13 +102,22 @@ public class Conexao {
 				c.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				throw new Exception("Não foi possível acessar o banco de dados.");
+				throw new Exception("Não foi possível acessar o banco de dados:\n" + e.getMessage());
 			}
-			throw new Exception("Não foi possível localizar o banco de dados.\nUm novo arquivo foi gerado.");
+			//informa que um novo arquivo foi gerado
+			throw new RuntimeException("Não foi possível localizar o banco de dados.\nUm novo arquivo foi gerado.");
 		}
 		//verifica se o arquivo é somente leitura
 		if (!file.canWrite()) {
-			throw new Exception("O banco de dados é somente leitura.\nNão será possível fazer alterações.");
+			throw new Exception("O banco de dados é somente leitura.");
+		}
+		//testa se é possível criar uma conexão (mesmo que já exista o arquivo)
+		try {
+			Connection c = getConnection();
+			c.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("Não foi possível acessar o banco de dados:\n" + e.getMessage());
 		}
 	}
 

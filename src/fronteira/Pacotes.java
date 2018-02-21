@@ -144,9 +144,14 @@ public class Pacotes {
 		//cria o banco caso este não exista
 		try {
 			Conexao.start();
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Inicializando banco de dados", JOptionPane
 					.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage() + "\n\nO programa será fechado.", "Erro ao inicializar " +
+					"o " +
+					"banco de dados", JOptionPane.ERROR_MESSAGE);
+			System.exit(-1);
 		}
 
 		Pacotes pacotes = new Pacotes();
