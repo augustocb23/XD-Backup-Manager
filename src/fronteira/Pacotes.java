@@ -1,6 +1,6 @@
 package fronteira;
 
-import controle.Conexao;
+import controle.InicializarBanco;
 import entidade.Backup;
 import entidade.Pacote;
 import entidade.Tag;
@@ -138,19 +138,21 @@ public class Pacotes {
 					break;
 				}
 			}
-		} catch (Exception e) {
-			// If Nimbus is not available, you can set the GUI to another look and feel.
+		} catch (Exception ignored) {
+			//caso não consiga iniciar o tema Nimbus, mantém o padrão do Java
 		}
+
 		//cria o banco caso este não exista
 		try {
-			Conexao.start();
+			InicializarBanco.start();
 		} catch (RuntimeException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Inicializando banco de dados", JOptionPane
 					.INFORMATION_MESSAGE);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage() + "\n\nO programa será fechado.", "Erro ao inicializar " +
-					"o " +
-					"banco de dados", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage() + "\n\nO programa será fechado.", "Erro ao " +
+					"inicializar" +
+					" " +
+					"o banco de dados", JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
 		}
 
