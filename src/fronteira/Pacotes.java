@@ -175,7 +175,9 @@ public class Pacotes {
 		ArrayList<Pacote> listaFiltrada = listaPacotes;
 
 		//filtra de acordo o backup selecionado
-		listaFiltrada.removeIf((Pacote pacote) -> pacote.getCodigoBackup() != cmbBackups.getSelectedItem());
+		int codigoBackup = (int) cmbBackups.getSelectedItem();
+		onAtualizar();
+		listaFiltrada.removeIf((Pacote pacote) -> pacote.getCodigoBackup() != codigoBackup);
 
 		//preenche a tabela de pacotes
 		mdlPacotes.setNumRows(0);
@@ -259,10 +261,9 @@ public class Pacotes {
 		//preenche a tabela de pacotes
 		mdlPacotes.setNumRows(0);
 		preencheTabela(listaPacotes);
-		//preenche a ComboBox
+		//preenche a ComboBox e a tabela de backups
 		cmbBackups.removeAllItems();
 		cmbBackups.addItem(null);
-		//preenche a tabela de backups
 		mdlBackups.setNumRows(0);
 		for (Backup backup : listaBackups) {
 			cmbBackups.addItem(backup.getCodigo());
