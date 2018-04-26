@@ -19,14 +19,14 @@ import java.util.LinkedHashSet;
 public class Pacotes {
 	private final static String titulo = "XD Backup Manager";
 	private final static String icone = "backups.png";
-	private static DefaultTableModel mdlPacotes = new DefaultTableModel() {
+	private DefaultTableModel mdlPacotes = new DefaultTableModel() {
 		//torna as células não editáveis
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
 	};
-	private static DefaultTableModel mdlBackups = new DefaultTableModel() {
+	private DefaultTableModel mdlBackups = new DefaultTableModel() {
 		//torna as células não editáveis
 		@Override
 		public boolean isCellEditable(int row, int column) {
@@ -127,6 +127,9 @@ public class Pacotes {
 			onDetalhesBackup();
 			onAtualizar();
 		});
+
+		mdlPacotes.addRow(new Object[]{"", "Carregando..."});
+		onAtualizar();
 	}
 
 	public static void main(String[] args) {
@@ -149,9 +152,7 @@ public class Pacotes {
 					.INFORMATION_MESSAGE);
 		}
 
-		Pacotes pacotes = new Pacotes();
-		mdlPacotes.addRow(new Object[]{"", "Carregando..."});
-		pacotes.onAtualizar();
+		new Pacotes();
 	}
 
 	//métodos para a aba pacotes
