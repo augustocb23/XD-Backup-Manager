@@ -1,9 +1,9 @@
 package fronteira;
 
-import controle.InicializarBanco;
 import entidade.Backup;
 import entidade.Pacote;
 import entidade.Tag;
+import persistencia.InicializarBanco;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -49,6 +49,7 @@ public class Pacotes {
 	private JButton novoBackupButton;
 	private JButton tiposButton;
 	private JButton excluirPacoteButton;
+	private JButton btnBackups;
 
 	private Pacotes() {
 		//define os dados da janela
@@ -117,7 +118,7 @@ public class Pacotes {
 			onExcluirBackup();
 			onAtualizar();
 		});
-		cmbBackups.addActionListener(e -> {
+		btnBackups.addActionListener(e -> {
 			if (cmbBackups.getSelectedItem() == null)
 				onAtualizar();
 			else
@@ -167,6 +168,7 @@ public class Pacotes {
 		if (nenhumItem("pacotes"))
 			return;
 		int linhaSelecionada = tblPacotes.getSelectedRow();
+		linhaSelecionada = tblPacotes.convertRowIndexToModel(linhaSelecionada);
 
 		CadastraPacote.altera((int) mdlPacotes.getValueAt(linhaSelecionada, 0));
 	}
@@ -182,18 +184,22 @@ public class Pacotes {
 		//preenche a tabela de pacotes
 		mdlPacotes.setNumRows(0);
 		preencheTabela(listaFiltrada);
+
+		//mantém a opção selecionada
+		cmbBackups.setSelectedItem(codigoBackup);
 	}
 
 	private void onExcluirPacote() {
 		if (nenhumItem("pacotes"))
 			return;
 		int linhaSelecionada = tblPacotes.getSelectedRow();
+		linhaSelecionada = tblPacotes.convertRowIndexToModel(linhaSelecionada);
 
 		//confirma a exclusão
 		String[] opcoes = {"Sim", "Não"};
 		if (JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir " + mdlPacotes.getValueAt
 				(linhaSelecionada, 1) + "?", "Excluir cadastro", JOptionPane.YES_NO_OPTION, JOptionPane
-				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 
 		try {
@@ -212,6 +218,7 @@ public class Pacotes {
 		if (nenhumItem("backups"))
 			return;
 		int linhaSelecionada = tblBackups.getSelectedRow();
+		linhaSelecionada = tblBackups.convertRowIndexToModel(linhaSelecionada);
 
 		//confirma a exclusão
 		String[] opcoes = {"Sim", "Não"};
@@ -219,7 +226,7 @@ public class Pacotes {
 						(linhaSelecionada, 0) + " de " + mdlBackups.getValueAt
 						(linhaSelecionada, 1) + "?\nIsto não apagará os pacotes associados a ele.", "Excluir cadastro",
 				JOptionPane.YES_NO_OPTION, JOptionPane
-						.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+						.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 
 		try {
@@ -237,6 +244,7 @@ public class Pacotes {
 		if (nenhumItem("backups"))
 			return;
 		int linhaSelecionada = tblBackups.getSelectedRow();
+		linhaSelecionada = tblBackups.convertRowIndexToModel(linhaSelecionada);
 
 		CadastraBackup.altera((int) mdlBackups.getValueAt(linhaSelecionada, 0));
 	}
@@ -321,7 +329,7 @@ public class Pacotes {
 					pacote.getTipo().getNome(), pacote.getAtor() == null ? null : pacote.getAtor().getNome(), new
 					SimpleDateFormat("dd/MM/yyyy").format(pacote
 					.getData()),
-					new DecimalFormat("##.### GB").format(pacote.getTamanho()), pacote.getCodigoBackup(), tags});
+					new DecimalFormat("##.### MB").format(pacote.getTamanho()), pacote.getCodigoBackup(), tags});
 		}
 	}
 

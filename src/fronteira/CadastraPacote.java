@@ -118,10 +118,10 @@ class CadastraPacote extends Cadastros {
 		adicionaCampo(pnlTamanho, lblTamanho, false);
 		spnTamanho = new JSpinner(new SpinnerNumberModel(0, 0, 9999999, .05));
 		adicionaCampo(pnlTamanho, spnTamanho, true);
-		JLabel lblGigas = new JLabel("GB");
+		JLabel lblGigas = new JLabel("MB");
 		adicionaCampo(pnlTamanho, lblGigas, false);
-		pnlTamanho.setToolTipText("Insira o tamanho do pacote, em gigabytes");
-		spnTamanho.setToolTipText("Insira o tamanho do pacote, em gigabytes");
+		pnlTamanho.setToolTipText("Insira o tamanho do pacote, em megabytes");
+		spnTamanho.setToolTipText("Insira o tamanho do pacote, em megabytes");
 		adicionaCampo(pnlCampos, pnlTamanho, true);
 		//campo tipo
 		JPanel pnlTipo = new JPanel(new GridBagLayout());

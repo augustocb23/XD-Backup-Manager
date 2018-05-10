@@ -1,6 +1,6 @@
 package entidade;
 
-import controle.TagDAO;
+import persistencia.TagDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

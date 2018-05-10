@@ -1,4 +1,4 @@
-package controle;
+package persistencia;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +16,7 @@ class Conexao {
 		return c;
 	}
 
-	public static String getDB() {
+	static String getDB() {
 		return DB;
 	}
 }

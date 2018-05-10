@@ -54,6 +54,7 @@ class ConsultaTipoPacote extends Consultas {
 						.ERROR_MESSAGE);
 				return;
 			}
+			linhaSeleciona = janela.tabelaConsulta.convertRowIndexToModel(linhaSeleciona);
 
 			tipoPacote.setCodigo((Integer) janela.modeloTabela.getValueAt(linhaSeleciona, 0));
 			tipoPacote.setNome(String.valueOf(janela.modeloTabela.getValueAt(linhaSeleciona, 1)));
@@ -114,11 +115,12 @@ class ConsultaTipoPacote extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 		//confirma a exclusão do cadastro
 		String[] opcoes = {"Sim", "Não"};
 		if (JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir " + modeloTabela.getValueAt
 				(linhaSelecionada, 1) + "?", "Excluir cadastro", JOptionPane.YES_NO_OPTION, JOptionPane
-				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 		try {
 			TipoPacote.apagaTipoPacote((int) modeloTabela.getValueAt(linhaSelecionada, 0));
@@ -147,6 +149,7 @@ class ConsultaTipoPacote extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 
 		//solicita o novo nome para alterar
 		String nome = CadastraTipoPacote.renomear(String.valueOf(modeloTabela.getValueAt(linhaSelecionada, 1)));

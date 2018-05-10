@@ -155,11 +155,11 @@ class CadastraBackup extends Cadastros {
 
 		//preenche a tabela de pacotes
 		for (Pacote pacote : listaPacotes) {
-			mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### GB").format
+			mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### MB").format
 					(pacote.getTamanho())});
 			//atualiza os dados
 			if (pacote.getTamanho() != null)
-				tamanho += pacote.getTamanho();
+				tamanho += pacote.getTamanho() / 1024;
 		}
 
 		testaCampos();
@@ -192,7 +192,7 @@ class CadastraBackup extends Cadastros {
 								"Continuar?",
 						"Adicionar " +
 								"pacote", JOptionPane.YES_NO_OPTION, JOptionPane
-								.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+								.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 					i.remove();
 				pacote.setCodigoBackup(null); //limpa o campo backup
 			}
@@ -203,10 +203,10 @@ class CadastraBackup extends Cadastros {
 		for (Pacote pacote : pacotes)
 			if (listaPacotes.add(pacote)) { //tenta adicionar
 				mdlPacotes.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), /*pacote.getTamanho() == null ?
-						null :*/ new DecimalFormat("##.### GB").format(pacote.getTamanho())}); //adiciona na tabela
+						null :*/ new DecimalFormat("##.### MB").format(pacote.getTamanho())}); //adiciona na tabela
 				//atualiza os dados
 				if (pacote.getTamanho() != null)
-					tamanho += pacote.getTamanho();
+					tamanho += pacote.getTamanho() / 1024;
 			} else if (repetido) { //avisa se houver um pacote repetido
 				JOptionPane.showMessageDialog(null, "Um ou mais pacotes já foram adicionados a este backup", "Pacote" +
 						" " +
@@ -234,7 +234,7 @@ class CadastraBackup extends Cadastros {
 				pacote.setCodigoBackup(-1);
 				//atualiza os dados
 				if (pacote.getTamanho() != null)
-					tamanho -= pacote.getTamanho();
+					tamanho -= pacote.getTamanho() / 1024;
 			}
 		}
 		//remove da tabela

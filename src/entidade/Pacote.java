@@ -1,6 +1,6 @@
 package entidade;
 
-import controle.PacoteDAO;
+import persistencia.PacoteDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

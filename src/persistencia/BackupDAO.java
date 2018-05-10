@@ -1,4 +1,4 @@
-package controle;
+package persistencia;
 
 import entidade.Backup;
 import entidade.Pacote;
@@ -30,9 +30,14 @@ public class BackupDAO {
 		for (Pacote pacote : backup.getPacotes())
 			if (pacote.getCodigoBackup() == null)
 				s.execute("UPDATE pacote SET codBackup = " + backup.getCodigo() + " WHERE codPacote=" + pacote
-						.getCodigo() + ";");
+						.getCodigo());
 			else //se for -1 (usuário removeu do backup)
-				s.execute("UPDATE pacote SET codBackup = NULL WHERE codPacote=" + pacote.getCodigo() + ";");
+				s.execute("UPDATE pacote SET codBackup = NULL WHERE codPacote=" + pacote.getCodigo());
+		//apaga backups sem nenhum pacote
+		s.execute("DELETE FROM backup\n" +
+				"WHERE NOT exists(SELECT *\n" +
+				"                 FROM pacote\n" +
+				"                 WHERE backup.codBackup = pacote.codBackup)");
 
 		s.close();
 		c.close();
@@ -52,7 +57,7 @@ public class BackupDAO {
 			backup.setCodigo(rs.getInt("codBackup"));
 			backup.setDataGravacao(rs.getDate("dataGravacao"));
 			backup.setTotPacotes(rs.getInt("pacotes"));
-			backup.setTamanho((double) rs.getFloat("tamanho"));
+			backup.setTamanho((double) rs.getFloat("tamanho") / 1024);
 
 			lista.add(backup);
 		}
@@ -71,7 +76,7 @@ public class BackupDAO {
 
 		ResultSet rs = s.executeQuery("SELECT codPacote, nomePacote, tamPacote, dataGravacao FROM pacote p LEFT " +
 				"NATURAL JOIN " +
-				"backup WHERE p.codBackup=" + codigo + ";");
+				"backup WHERE p.codBackup=" + codigo);
 		while (rs.next()) {
 			Pacote pacote = new Pacote();
 
@@ -95,9 +100,9 @@ public class BackupDAO {
 		Connection c = Conexao.getConnection();
 		Statement s = c.createStatement();
 
-		s.execute("DELETE FROM backup WHERE codBackup=" + codigo + ";");
+		s.execute("DELETE FROM backup WHERE codBackup=" + codigo);
 		//limpa os pacotes
-		s.execute("UPDATE pacote SET codBackup=NULL WHERE codBackup=" + codigo + ";");
+		s.execute("UPDATE pacote SET codBackup=NULL WHERE codBackup=" + codigo);
 
 		s.close();
 		c.close();
@@ -111,15 +116,19 @@ public class BackupDAO {
 		Long data = backup.getDataGravacao().getTime();
 
 		s.execute("UPDATE backup SET codBackup=" + backup.getCodigo() + ", dataGravacao=" + data + " WHERE codBackup="
-				+ codigo + ";");
+				+ codigo);
 		//atualiza os pacotes
 		for (Pacote pacote : backup.getPacotes())
 			if (pacote.getCodigoBackup() == null)
 				s.execute("UPDATE pacote SET codBackup = " + backup.getCodigo() + " WHERE codPacote=" + pacote
-						.getCodigo() + ";");
+						.getCodigo());
 			else //se for -1 (usuário removeu do backup)
-				s.execute("UPDATE pacote SET codBackup = NULL WHERE codPacote=" + pacote.getCodigo() + ";");
-
+				s.execute("UPDATE pacote SET codBackup = NULL WHERE codPacote=" + pacote.getCodigo());
+		//apaga backups sem nenhum pacote
+		s.execute("DELETE FROM backup\n" +
+				"WHERE NOT exists(SELECT *\n" +
+				"                 FROM pacote\n" +
+				"                 WHERE backup.codBackup = pacote.codBackup)");
 		s.close();
 		c.close();
 	}

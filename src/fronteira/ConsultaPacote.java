@@ -48,6 +48,7 @@ class ConsultaPacote extends Consultas {
 			}
 
 			for (int linha : linhasSelecionadas) {
+				linha = janela.tabelaConsulta.convertRowIndexToModel(linha);
 				Pacote pacote = null; //busca os dados do pacote selecionado no banco
 				try {
 					pacote = Pacote.buscaPacote((Integer) janela.modeloTabela.getValueAt(linha, 0));
@@ -87,7 +88,7 @@ class ConsultaPacote extends Consultas {
 		//imprime os resultados na tabela
 		modeloTabela.setNumRows(0);
 		for (Pacote pacote : listaFiltrada)
-			modeloTabela.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### GB")
+			modeloTabela.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### MB")
 					.format(pacote.getTamanho())});
 	}
 
@@ -103,7 +104,7 @@ class ConsultaPacote extends Consultas {
 		//preenche a tabela
 		modeloTabela.setNumRows(0);
 		for (Pacote pacote : lista)
-			modeloTabela.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### GB")
+			modeloTabela.addRow(new Object[]{pacote.getCodigo(), pacote.getNome(), new DecimalFormat("##.### MB")
 					.format(pacote.getTamanho()), pacote.getCodigoBackup()});
 	}
 
@@ -116,11 +117,12 @@ class ConsultaPacote extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 		//confirma a exclusão do cadastro
 		String[] opcoes = {"Sim", "Não"};
 		if (JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir " + modeloTabela.getValueAt
 				(linhaSelecionada, 1) + "?", "Excluir cadastro", JOptionPane.YES_NO_OPTION, JOptionPane
-				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 		try {
 			Pacote.excluirPacote((int) modeloTabela.getValueAt(linhaSelecionada, 0));

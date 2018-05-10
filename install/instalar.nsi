@@ -3,7 +3,7 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "XD Backup Manager"
 !define PRODUCT_VERSION "1.0"
-!define PRODUCT_PUBLISHER "Augusto CÈsar Bisognin"
+!define PRODUCT_PUBLISHER "Augusto C√©sar Bisognin"
 !define PRODUCT_WEB_SITE "https://github.com/augustocb23"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\backups.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -51,7 +51,7 @@ InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
 
-Section "SeÁ„oPrincipal" SEC01
+Section "Se√ß√£oPrincipal" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "backups.png"
@@ -79,7 +79,7 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
 SectionEnd
 
-; verifica se o Java 8 est· instalado
+; verifica se o Java 8 est√° instalado
 Section "Java"
   SetRegView 64
     ReadRegStr $0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" CurrentVersion
@@ -88,7 +88,7 @@ Section "Java"
 
   ${If} $0 < "1.8"
     ${If} $1 < "1.8"
-      MessageBox MB_OK "JRE n„o instalado ou desatualizado. FaÁa o download em java.com antes de iniciar o programa"
+      MessageBox MB_OK "JRE n√£o instalado ou desatualizado. Fa√ßa o download em java.com antes de iniciar o programa"
       ${EndIf}
   ${EndIf}
 SectionEnd
@@ -99,7 +99,7 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Tem certeza que quer remover completamente $(^Name) e todos os seus componentes? Dados do usu·rio n„o ser„o apagados." IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Tem certeza que quer remover completamente $(^Name) e todos os seus componentes? Dados do usu√°rio n√£o ser√£o apagados." IDYES +2
   Abort
 FunctionEnd
 

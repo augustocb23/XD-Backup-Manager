@@ -1,11 +1,11 @@
-package controle;
+package persistencia;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static controle.Conexao.getConnection;
+import static persistencia.Conexao.getConnection;
 
 public class InicializarBanco {
 	public static void start() throws Exception {

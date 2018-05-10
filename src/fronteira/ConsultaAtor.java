@@ -55,6 +55,7 @@ class ConsultaAtor extends Consultas {
 						.ERROR_MESSAGE);
 				return;
 			}
+			linhaSeleciona = janela.tabelaConsulta.convertRowIndexToModel(linhaSeleciona);
 
 			ator.setCodigo((Integer) janela.modeloTabela.getValueAt(linhaSeleciona, 0));
 			ator.setNome(String.valueOf(janela.modeloTabela.getValueAt(linhaSeleciona, 1)));
@@ -80,6 +81,7 @@ class ConsultaAtor extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 
 		//solicita o novo nome para alterar
 		String nome = CadastraAtor.renomear(String.valueOf(modeloTabela.getValueAt(linhaSelecionada, 1)));
@@ -140,11 +142,12 @@ class ConsultaAtor extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 		//confirma a exclusão do cadastro
 		String[] opcoes = {"Sim", "Não"};
 		if (JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir " + modeloTabela.getValueAt
 				(linhaSelecionada, 1) + "?", "Excluir cadastro", JOptionPane.YES_NO_OPTION, JOptionPane
-				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 		try {
 			Ator.apagaAtor((int) modeloTabela.getValueAt(linhaSelecionada, 0));

@@ -1,4 +1,4 @@
-package controle;
+package persistencia;
 
 import entidade.Tag;
 

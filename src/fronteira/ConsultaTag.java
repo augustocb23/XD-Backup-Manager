@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
-public class ConsultaTag extends Consultas {
+class ConsultaTag extends Consultas {
 	private DefaultTableModel modeloTabela = new DefaultTableModel() {
 		//torna as células não editáveis
 		@Override
@@ -50,6 +50,7 @@ public class ConsultaTag extends Consultas {
 			}
 
 			for (int linha : linhasSelecionadas) {
+				linha = janela.tabelaConsulta.convertRowIndexToModel(linha);
 				Tag tag = new Tag();
 				tag.setCodigo((Integer) janela.modeloTabela.getValueAt(linha, 0));
 				tag.setNome(String.valueOf(janela.modeloTabela.getValueAt(linha, 1)));
@@ -115,11 +116,12 @@ public class ConsultaTag extends Consultas {
 					.INFORMATION_MESSAGE);
 			return;
 		}
+		linhaSelecionada = tabelaConsulta.convertRowIndexToModel(linhaSelecionada);
 		//confirma a exclusão do cadastro
 		String[] opcoes = {"Sim", "Não"};
 		if (JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir " + modeloTabela.getValueAt
 				(linhaSelecionada, 1) + "?", "Excluir cadastro", JOptionPane.YES_NO_OPTION, JOptionPane
-				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) == JOptionPane.NO_OPTION)
+				.QUESTION_MESSAGE, null, opcoes, opcoes[1]) != JOptionPane.YES_OPTION)
 			return;
 		try {
 			Tag.apagaTag((int) modeloTabela.getValueAt(linhaSelecionada, 0));
