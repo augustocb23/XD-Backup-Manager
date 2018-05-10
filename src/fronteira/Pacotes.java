@@ -50,6 +50,7 @@ public class Pacotes {
 	private JButton tiposButton;
 	private JButton excluirPacoteButton;
 	private JButton btnBackups;
+	private JTabbedPane tabs;
 
 	private Pacotes() {
 		//define os dados da janela
@@ -127,6 +128,13 @@ public class Pacotes {
 		detalhesButton.addActionListener(e -> {
 			onDetalhesBackup();
 			onAtualizar();
+		});
+		tabs.addChangeListener(e -> {
+			txtBusca.setText(null);
+			if (tabs.getSelectedIndex() == 0)
+				txtBusca.setEnabled(true);
+			else
+				txtBusca.setEnabled(false);
 		});
 
 		mdlPacotes.addRow(new Object[]{"", "Carregando..."});
@@ -256,6 +264,9 @@ public class Pacotes {
 	}
 
 	private void onAtualizar() {
+		//limpa a caixa da pesquisa
+		txtBusca.setText(null);
+
 		//busca as listas no banco
 		ArrayList<Backup> listaBackups;
 		try {

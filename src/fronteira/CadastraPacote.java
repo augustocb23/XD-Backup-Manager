@@ -206,10 +206,10 @@ class CadastraPacote extends Cadastros {
 
 		ator = pacote.getAtor();
 		tipoPacote = pacote.getTipo();
-
 		txtNome.setText(pacote.getNome());
 		txtAtor.setText(ator.getNome());
 		txtData.setText(new SimpleDateFormat("dd/MM/yyyy").format(pacote.getData()));
+		data = pacote.getData();
 		spnTamanho.setValue(pacote.getTamanho());
 		txtTipo.setText(tipoPacote.getNome());
 		listaTags = pacote.getTags();
